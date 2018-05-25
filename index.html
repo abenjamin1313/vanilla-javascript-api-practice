@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0">
+    <meta name="author" content="Adam M. Victor">
+    <meta name="description" content="JavaScript application using that fetches random facts on any number entered. I used both XHR and the Fetch API to make requests to http://numbersapi.com">
+    <meta name="keywords" content="Bootstarp 4, Numbers API, Fetch(), XMLHttpRequest(), Vanilla JS">
+    <title>Number Facts using the Numbers API</title>
+    <!-- Bootstrap 4-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    <style>
+        #factF, #factA {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-dark">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 mx-auto">
+                <div class="card bg-primary text-white mt-5 p-4">
+                    <h1>Number Facts</h1>
+                    <p>Enter a number to get a random fact.</p>
+                    <p>This number fact generator is provided by the Numbers API and done by a XMLHttpRequest() request.</p>
+                    <p>Both use Bootstarp 4 layout.</p>
+                    <input type="number" class="form-control form-control-lg" id="numberInputA" placeholder="Enter any number.">
+                    <div id="factA" class="card-body">
+                        <h4 class="card-tile">
+                            Number Fact
+                        </h4>
+                        <p id="factTextA" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mx-auto">
+                <div class="card bg-primary text-white mt-5 p-4">
+                    <h1>Number Facts</h1>
+                    <p>Enter a number to get a random fact.</p>
+                    <p>This number fact generator is provided by the Numbers API and done by a FETCH() promise based request..</p>
+                    <p>Both use Bootstarp 4 layout.</p>
+                    <input type="number" class="form-control form-control-lg" id="numberInputF" placeholder="Enter any number.">
+                    <div id="factF" class="card-body">
+                        <h4 class="card-tile">
+                            Number Fact
+                        </h4>
+                        <p id="factTextF" class="card-text"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let factA = document.querySelector('#factA');
+        let factF = document.querySelector('#factF');
+        let factTextA = document.querySelector('#factTextA');
+        let factTextF = document.querySelector('#factTextF');
+        let numberInputA = document.querySelector('#numberInputA');
+        let numberInputF = document.querySelector('#numberInputF');
+
+        numberInputA.addEventListener('input', getFactAjax);
+        numberInputF.addEventListener('input', getFactFetch);
+
+        function getFactAjax() {
+            let number = numberInputA.value;
+            
+            let xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://numbersapi.com/'+number);
+
+            xhr.onload = function(){
+                if(this.status == 200 && number != ''){
+                    factA.style.display = 'block';
+                    factTextA.innerText = this.responseText;
+                }
+            }
+
+            xhr.send();
+        }
+        
+        function getFactFetch(){
+            let number = numberInputF.value;
+
+            fetch('http://numbersapi.com/'+number)
+                .then(response => response.text())
+                .then(data => {
+                    if(number != ''){
+                        factF.style.display = 'block';
+                        factTextF.innerText = data;
+                    }
+                })
+                .catch(err => console.log(err));
+        }
+
+    </script>
+</body>
+</html>
